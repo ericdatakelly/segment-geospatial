@@ -464,8 +464,13 @@ class LangSAM:
         plt.figure(figsize=figsize)
         plt.imshow(self.image)
 
+        selective = kwargs.get("selective", False)
+
         if add_boxes:
-            for box in self.boxes:
+            boxes = self.boxes
+            if selective:
+                boxes = [b for b in self.boxes for p in self.phrases if len(p) > 0]
+            for box in boxes:
                 # Draw bounding box
                 box = box.cpu().numpy()  # Convert the tensor to a numpy array
                 rect = patches.Rectangle(
